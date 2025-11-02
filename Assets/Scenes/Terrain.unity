@@ -672,7 +672,7 @@ MonoBehaviour:
   lurePrefab: {fileID: 2771568443423027147, guid: 2d8fb8c96ffe6e6498bbc62be32fb0d0, type: 3}
   lineRenderer: {fileID: 1580439684}
   rodPower: 1
-  reelSpeed: 10
+  reelSpeed: 15
   despawnDistance: 0.2
   sampleCount: 6
 --- !u!1 &1197764848

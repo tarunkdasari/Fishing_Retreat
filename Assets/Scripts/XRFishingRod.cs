@@ -20,6 +20,7 @@ public class XRFishingRod : MonoBehaviour
     private XRBaseControllerInteractor controllerInteractor;
 
     private bool isButtonHeld = false;
+    private bool reeledIn = false;
     private Vector3 offscreen = new Vector3(999, 999, 999);
 
     // --- velocity tracking ---
@@ -71,7 +72,13 @@ public class XRFishingRod : MonoBehaviour
     }
 
     private void OnCastRelease(DeactivateEventArgs args)
-    {  
+    {
+        if (reeledIn)
+        {
+            //ignore once
+            reeledIn = false;
+            return;
+        }
         if(currentLure) { return; }
         currentLure = Instantiate(lurePrefab, rodTip.position, rodTip.rotation);
         Rigidbody rb = currentLure.GetComponent<Rigidbody>();
@@ -85,6 +92,27 @@ public class XRFishingRod : MonoBehaviour
         lineRenderer.SetPosition(1, currentLure.transform.position);
     }
 
+    void FixedUpdate()
+    {
+        // --- REELING ---
+        if (currentLure != null && isButtonHeld)
+        {
+            Rigidbody rb = currentLure.GetComponent<Rigidbody>();
+             rb.MovePosition(Vector3.MoveTowards(
+                currentLure.transform.position,
+                rodTip.position,
+                reelSpeed * Time.deltaTime
+            ));
+
+            // If close enough, despawn
+            if (Vector3.Distance(currentLure.transform.position, rodTip.position) < despawnDistance)
+            {
+                Destroy(currentLure);
+                isButtonHeld = false;
+                reeledIn = true;
+            }
+        }
+    }
     void LateUpdate()
     {
         // Raw frame velocity
@@ -103,23 +131,6 @@ public class XRFishingRod : MonoBehaviour
             sum += v;
 
         tipVelocity = sum / velocitySamples.Count;
-
-        // --- REELING ---
-        if (currentLure != null && isButtonHeld)
-        {
-            currentLure.transform.position = Vector3.MoveTowards(
-                currentLure.transform.position,
-                rodTip.position,
-                reelSpeed * Time.deltaTime
-            );
-
-            // If close enough, despawn
-            if (Vector3.Distance(currentLure.transform.position, rodTip.position) < despawnDistance)
-            {
-                Destroy(currentLure);
-                isButtonHeld = false;
-            }
-        }
 
         // Update line
         if (currentLure)
