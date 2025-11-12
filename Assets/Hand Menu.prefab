@@ -164,6 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2855189008832177531}
   - component: {fileID: 2310733741280145966}
+  - component: {fileID: 5096609495363032407}
   m_Layer: 5
   m_Name: Volume
   m_TagString: Untagged
@@ -238,13 +239,39 @@ MonoBehaviour:
   m_FillRect: {fileID: 5283881035880713736}
   m_HandleRect: {fileID: 6193950898062521950}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.7
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5096609495363032407}
+        m_TargetAssemblyTypeName: VolumeSettings, Assembly-CSharp
+        m_MethodName: SetMusicVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5096609495363032407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983892923586439009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3971b4fb1c7031a4a8a3ae7a0775d0b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mixer: {fileID: 24100000, guid: 7425a60bfa6934841acbc608bcce94e5, type: 2}
+  slider: {fileID: 2310733741280145966}
 --- !u!1 &1037584790635564986
 GameObject:
   m_ObjectHideFlags: 0
