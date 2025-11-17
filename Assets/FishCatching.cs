@@ -20,6 +20,10 @@ public class FishCatching : MonoBehaviour
             return;
         }
         currFish = Instantiate(fishPrefab, fishTransform.position, Quaternion.identity);
+
+        float scale = Random.Range(0.7f, 1.4f);
+        currFish.transform.localScale = Vector3.one * scale;
+
         currFish.transform.SetParent(fishTransform);
         MeshRenderer mr = currFish.GetComponentInChildren<MeshRenderer>();
         // Get a copy of the material array
@@ -36,9 +40,7 @@ public class FishCatching : MonoBehaviour
         );
         mr.materials = mats;
 
-        // --- Optional: Randomize Scale ---
-        float scale = Random.Range(0.7f, 1.4f);
-        currFish.transform.localScale = Vector3.one * scale;
+
         Debug.Log("Fish hooked!");
     }
 }

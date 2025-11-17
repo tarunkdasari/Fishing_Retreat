@@ -8,11 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Terrain.unity
     guid: 4fab41531e2e9bb418ff3866e767e57a
-<<<<<<< Updated upstream
   - enabled: 1
-=======
-  - enabled: 0
->>>>>>> Stashed changes
     path: Assets/Scenes/Kayaking v2.unity
     guid: 716f3590255f07046bc8138c2c7cb2d9
   m_configObjects:
