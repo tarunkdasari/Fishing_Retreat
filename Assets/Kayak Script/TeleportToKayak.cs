@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿using System.Collections;
-=======
 using System.Collections;
->>>>>>> de70214d65c24c64712e14e52245c1018d2c9f48
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
