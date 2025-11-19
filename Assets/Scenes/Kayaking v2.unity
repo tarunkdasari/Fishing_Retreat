@@ -834,13 +834,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftPaddle: {fileID: 499600479}
   rightPaddle: {fileID: 1784074507}
+  leftDetector: {fileID: 1560918171}
+  rightDetector: {fileID: 559037103}
   kayakRigidbody: {fileID: 193518934}
-  strokeForce: 20
+  baseStrokeForce: 8
+  depthMultiplier: 6
+  velocityMultiplier: 2.5
   turnForce: 3
+  sideDistanceMultiplier: 2
   minSpeed: 0.05
   damping: 0.98
-  leftWaterDetector: {fileID: 1560918171}
-  rightWaterDetector: {fileID: 559037103}
 --- !u!1 &209331059
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,6 +2040,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829e824c5425a8647ad7c09420fe450c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  depth: 0
+  waterHeight: 10.8
 --- !u!135 &559037104
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5185,6 +5190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 829e824c5425a8647ad7c09420fe450c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  depth: 0
+  waterHeight: 10.8
 --- !u!135 &1560918172
 SphereCollider:
   m_ObjectHideFlags: 0

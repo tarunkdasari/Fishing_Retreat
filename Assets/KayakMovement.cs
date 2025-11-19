@@ -8,19 +8,21 @@ public class KayakMovement : MonoBehaviour
     [Header("Paddle References")]
     public Transform leftPaddle;
     public Transform rightPaddle;
+    public PaddleWaterDetector leftDetector;
+    public PaddleWaterDetector rightDetector;
 
     [Header("Kayak")]
     public Rigidbody kayakRigidbody;
 
     [Header("Settings")]
-    public float strokeForce = 6f;          // linear force
+    public float baseStrokeForce = 5f;     // baseline thrust
+    public float depthMultiplier = 4f;     // deeper = more powerful
+    public float velocityMultiplier = 1.2f; // faster blade = stronger stroke
     public float turnForce = 3f;            // rotational force
+    public float sideDistanceMultiplier = 1.5f; // turning stronger if paddle further from center
     public float minSpeed = 0.05f;          // ignore tiny motions
-    public float damping = 0.97f;           // water drag
+    public float damping = 0.97f;
 
-    [Header("Paddle-Water Detectors")]
-    public PaddleWaterDetector leftWaterDetector;
-    public PaddleWaterDetector rightWaterDetector;
 
     // Previous frame paddle positions
     private Vector3 lastLeftPos;
@@ -42,19 +44,76 @@ public class KayakMovement : MonoBehaviour
         bool leftExists = leftPaddle != null;
         bool rightExists = rightPaddle != null;
 
-        if (leftExists && leftWaterDetector)
-            HandleSinglePaddle(leftPaddle, ref lastLeftPos, isLeft: true, leftWaterDetector);
+        if (leftPaddle)
+            HandlePaddle(leftPaddle, ref lastLeftPos, leftDetector, isLeft: true);
 
-        if (rightExists && rightWaterDetector)
-            HandleSinglePaddle(rightPaddle, ref lastRightPos, isLeft: false, rightWaterDetector);
+        if (rightPaddle)
+            HandlePaddle(rightPaddle, ref lastRightPos, rightDetector, isLeft: false);
 
         // Water drag
         kayakRigidbody.velocity *= damping;
         kayakRigidbody.angularVelocity *= damping;
     }
 
+    // works based on paddle depth in water
+    private void HandlePaddle(Transform paddle, ref Vector3 lastPos, PaddleWaterDetector detector, bool isLeft)
+    {
+        // if paddle isn't in water (or doesn't exist), do nothing
+        if (!detector || !detector.IsInWater()) return;
+
+        // Paddle velocity
+        Vector3 paddleVel = (paddle.position - lastPos) / Time.fixedDeltaTime;
+        lastPos = paddle.position;
+
+        float paddleSpeed = paddleVel.magnitude;
+        // if paddle speed is too slow, do nothing
+        if (paddleSpeed < minSpeed) return;
+
+        // Backward stroke
+        float strokePower = Vector3.Dot(paddleVel, -kayakRigidbody.transform.forward);
+        if (strokePower <= 0f) return;
+
+        // ---------- DEPTH-BASED STROKE FORCE ----------
+        float depthFactor = detector.depth * depthMultiplier; // deeper = more powerful
+        float velocityFactor = paddleSpeed * velocityMultiplier;
+
+        float totalPower = baseStrokeForce * depthFactor * velocityFactor;
+
+        Debug.Log($"{(isLeft ? "LEFT" : "RIGHT")} Depth: {detector.depth:F3}");
+        Debug.DrawRay(
+            paddle.position,
+            Vector3.up * detector.depth,
+            isLeft ? Color.cyan : Color.magenta,
+            0.25f
+        );
+
+        // Forward thrust
+        Vector3 force = kayakRigidbody.transform.forward * (strokePower * totalPower);
+        kayakRigidbody.AddForce(force, ForceMode.Acceleration);
+
+        Debug.Log($"{(isLeft ? "LEFT" : "RIGHT")} Force: {force.magnitude:F2}");
+
+        // ---------- ADVANCED TURNING ----------
+        // How far paddle is from kayak center?
+        Vector3 localPos = kayakRigidbody.transform.InverseTransformPoint(paddle.position);
+        float sideDistance = Mathf.Abs(localPos.x); // farther = more turning
+
+        float sideFactor = sideDistance * sideDistanceMultiplier;
+
+        // Decide turn direction
+        float torqueDir = isLeft ? +1f : -1f;
+
+        float torqueAmount = strokePower * totalPower * sideFactor * 0.5f; // scaled down for stability
+
+        kayakRigidbody.AddTorque(Vector3.up * torqueAmount * torqueDir, ForceMode.Acceleration);
+
+        // Debug
+        Debug.DrawRay(paddle.position, paddleVel, isLeft ? Color.cyan : Color.magenta, 0.05f);
+        Debug.DrawRay(kayakRigidbody.position, force.normalized * 3f, Color.red, 0.1f);
+    }
+
     // works only when paddle is in water
-    private void HandleSinglePaddle(Transform paddle, ref Vector3 lastPos, bool isLeft, PaddleWaterDetector waterDetector)
+/*    private void HandleSinglePaddle(Transform paddle, ref Vector3 lastPos, bool isLeft, PaddleWaterDetector waterDetector)
     {
         if (!waterDetector.IsInWater())
         {
@@ -84,7 +143,7 @@ public class KayakMovement : MonoBehaviour
         // Debug visuals
         Debug.DrawRay(kayakRigidbody.position, forwardForce.normalized * 3f, Color.red, 0.1f);
         Debug.DrawRay(paddle.position, paddleVel, isLeft ? Color.cyan : Color.magenta, 0.1f);
-    }
+    }*/
 
       // works when paddle is out of air and kayak moves
     /*    private void HandleSinglePaddle(Transform paddle, ref Vector3 lastPos, bool isLeft)
