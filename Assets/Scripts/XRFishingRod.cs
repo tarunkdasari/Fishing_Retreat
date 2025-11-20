@@ -107,6 +107,16 @@ public class XRFishingRod : MonoBehaviour
             // If close enough, despawn
             if (Vector3.Distance(currentLure.transform.position, rodTip.position) < despawnDistance)
             {
+                Transform fishAttach = currentLure.transform.Find("FishAttach");
+                if (fishAttach != null && fishAttach.childCount > 0)
+                {
+                    Transform fishTransform = fishAttach.GetChild(0);
+                    GameObject currFish = fishTransform.gameObject;
+                    currFish.transform.SetParent(null);
+                    Rigidbody rbf = currFish.GetComponent<Rigidbody>();
+                    //rbf.isKinematic = false;
+                    Destroy(currFish, 15f);
+                }
                 Destroy(currentLure);
                 isButtonHeld = false;
                 reeledIn = true;
