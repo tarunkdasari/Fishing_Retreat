@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Terrain.unity
     guid: 4fab41531e2e9bb418ff3866e767e57a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Old_2-Hand Kayaking_Old.unity
     guid: 716f3590255f07046bc8138c2c7cb2d9
+  - enabled: 1
+    path: Assets/Scenes/2HandKayaking.unity
+    guid: 78b560e9daf177d49bc4de3f8f2c4641
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 856d17b60ada9e946ba7e8ec53181fd4, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 69daf254817d3e04687826d5d1b4678e, type: 2}
