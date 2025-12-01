@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Fishing_Retreat.sln"
+    "dotnet.defaultSolution": "fishing_retreat.sln"
 }
